@@ -192,8 +192,9 @@ About 190 tests run in a few seconds without network access. The ones I care mos
 
 ## Background
 
-This replaces two private projects: a multi-service Binance bot (Postgres, Grafana, five
-strategies) and an RSI bot for Korean stocks over Kiwoom Securities' REST API. It keeps
+This replaces two private projects: a multi-service Binance bot from June 2025 (Postgres,
+Grafana, five strategies), whose first backtest report made zero trades, and an RSI bot
+for Korean stocks over Kiwoom Securities' REST API from December 2025. It keeps
 the RSI rules and the paper-broker idea from the second and the Binance target from the
 first, in one small process with the safety checks up front.
 
