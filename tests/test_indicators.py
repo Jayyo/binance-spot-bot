@@ -5,6 +5,15 @@ from hypothesis import strategies as st
 from spotbot.indicators import Ema, Rsi
 from tests.reference import ema_series, rsi_series
 
+
+def assert_series_close(got, want, **tol):
+    """Warm-up values are None; pytest 9's approx refuses None, so compare those separately."""
+    assert [g is None for g in got] == [w is None for w in want]
+    assert [g for g in got if g is not None] == pytest.approx(
+        [w for w in want if w is not None], **tol
+    )
+
+
 # Wilder's RSI example as tabulated in the RSI spreadsheet of StockCharts' ChartSchool.
 CLOSES = [
     44.3389, 44.0902, 44.1497, 43.6124, 44.3278, 44.8264, 45.0955, 45.4245, 45.8433, 46.0826,
@@ -56,11 +65,11 @@ def test_incremental_rsi_matches_batch_reference(closes, period):
     rsi = Rsi(period)
     got = [rsi.update(c) for c in closes]
     want = rsi_series(closes, period)
-    assert got == pytest.approx(want, rel=1e-9, abs=1e-9)
+    assert_series_close(got, want, rel=1e-9, abs=1e-9)
 
 
 @given(prices, st.integers(min_value=1, max_value=50))
 def test_incremental_ema_matches_batch_reference(closes, period):
     ema = Ema(period)
     got = [ema.update(c) for c in closes]
-    assert got == pytest.approx(ema_series(closes, period), rel=1e-9)
+    assert_series_close(got, ema_series(closes, period), rel=1e-9)
